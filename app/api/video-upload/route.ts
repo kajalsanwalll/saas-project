@@ -99,27 +99,31 @@ export async function POST(request: NextRequest){
             }
         )
 
-
-
-        return NextResponse.json(
-            {
-                publicId: result.publicId
-            },
-            {
-                status:200
+        const video = await prisma.video.create({
+            data: {
+                title,
+                description,
+                publicId: result.public_id,
+                originalSize: originalSize,
+                compressedSize: String(result.bytes),
+                duration: result.duration || 0
             }
-        )
+        })
+
+        return NextResponse.json(video)
 
     } catch (error) {
-        console.log("Upload image failed!", error);
+        console.log("Upload video failed!", error);
         return NextResponse.json(
             {
-                error:"Upload image failed!"
+                error:"Upload video failed!"
             },
             {
                 status: 500
             }
         )
         
+    }finally{
+        await prisma.$disconnect()
     }
 }
