@@ -1,15 +1,96 @@
-🚀 AI-Powered SaaS Platform (Next.js · Prisma · NeonDB · Clerk · Cloudinary)
+SaaS Video & Image Sharing Platform
+---
+A modern SaaS platform for uploading, managing, and sharing videos and images securely. Built with Next.js (App Router), Prisma, PostgreSQL (Neon), and Cloudinary. Users can upload videos and images, control access, and transform media into social-ready formats.
 
+🖥 Features
+---
+* User Authentication: Sign up, sign in, and secure access using Clerk.
+
+* Video Uploads: Users can upload videos that are only visible to them.
+
+* Video Compression: Automatically compress videos before storing to save space and improve load times.
+
+* Image Uploads & Downloads: Users can upload images and download them safely; temporary anchor links are deleted after download.
+
+* Image Conversion: Convert images into multiple formats and aspect ratios for platforms like Instagram (square/post), Stories, etc.
+
+* Cloud Storage: Media files stored in Cloudinary for fast delivery.
+
+* Modern UI: Clean interface with TailwindCSS and shadcn/ui components.
+
+* Secure API: Routes secured per-user using server-side authentication.
+
+🚀 Tech Stack
+---
+Frontend: Next.js (App Router), React, TailwindCSS
+
+Backend: Next.js API Routes, Prisma ORM
+
+Database: PostgreSQL (Neon)
+
+Authentication: Clerk
+
+Cloud Storage & Media Processing: Cloudinary (supports compression, resizing, and format conversions)
+
+
+⚡ Getting Started
+---
+1. Clone the repo
+git clone <https://github.com/kajalsanwalll/saas-project>
+
+    cd saas-project
+
+2. Install dependencies using
+npm install
+
+3. Configure environment variables
+
+ Create a .env file with:
+
+* DATABASE_URL="postgresql://<user>:<password>@<host>/<db>?sslmode=require&channel_binding=require"
+
+* CLOUDINARY_CLOUD_NAME=<your-cloud-name>
+
+* CLOUDINARY_API_KEY=<your-api-key>
+
+* CLOUDINARY_API_SECRET=<your-api-secret>
+
+* NEXT_PUBLIC_CLERK_FRONTEND_API=<your-clerk-frontend-api>
+
+* CLERK_API_KEY=<your-clerk-api-key>
+
+4. Run the project using
+"npm run dev"
+
+
+Open http://localhost:3000
+ to view the app.
+
+🔑 Usage
 ---
 
-A full-stack AI-powered SaaS application built using Next.js, designed with real-world product architecture and scalability in mind.
+Go to /Home
 
-The project integrates Clerk authentication for secure user management and protected routes, Prisma ORM with NeonDB (serverless Postgres) for efficient database handling, and Cloudinary for advanced media uploads and optimization (images and videos).
+Sign Up / Sign In to start using the platform.
 
-The application supports AI-powered workflows, media uploads, and modern SaaS patterns such as middleware-based auth, server components, and API-driven features. The frontend is optimized using Next.js best practices, ensuring performance, responsiveness, and maintainability.
+Upload videos — only visible to the uploader; they are automatically compressed for faster load and smaller storage.
 
-This project demonstrates a strong understanding of production-grade SaaS architecture, including authentication flows, database modeling, serverless infrastructure, and third-party service integration.
+Upload images — download links are deleted automatically after download.
 
+Convert images into social-ready formats (square, story, post).
+
+Share content safely via your social-share page.
+
+🛠 Future Improvements
 ---
-Tech Stack:
-Next.js · Prisma · NeonDB · Clerk Auth · Cloudinary · Tailwind CSS
+Support more video formats and advanced compression options.
+
+Add image filters, templates, and stickers for social posts.
+
+Implement real-time collaboration for editing shared media.
+
+Add analytics dashboard for user activity.
+
+📄 License
+---
+MIT License © 2026 Kajal Sanwal
