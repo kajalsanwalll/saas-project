@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ClerkProvider, UserButton } from "@clerk/nextjs";
+import { ClerkProvider, UserButton, SignInButton, SignUpButton, SignOutButton, useUser } from "@clerk/nextjs";
+
 import { ThemeProvider, useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,7 @@ import {
   Sun,
 } from "lucide-react";
 
-// Client-only theme toggle to prevent hydration errors
+// Client-only theme toggle
 function ThemeToggle({ collapsed }: { collapsed: boolean }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -41,6 +42,7 @@ function ThemeToggle({ collapsed }: { collapsed: boolean }) {
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const { isSignedIn } = useUser();
 
   const navItems = [
     { label: "Home", href: "/home", icon: Home },
@@ -51,7 +53,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-        <div className="flex min-h-screen bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
+        <div className="flex min-h-screen bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 relative">
           
           {/* 🧭 Sidebar */}
           <aside
@@ -95,21 +97,41 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </nav>
               </div>
 
-              {/* Bottom */}
-              <div className="space-y-4">
-                {/* ✅ Fixed Theme Toggle */}
+              {/* Bottom: only theme toggle */}
+              <div className="mt-auto">
                 <ThemeToggle collapsed={collapsed} />
-
-                {/* Clerk User */}
-                <div className={`flex ${collapsed ? "justify-center" : "justify-start"}`}>
-                  <UserButton afterSignOutUrl="/sign-in" />
-                </div>
               </div>
             </div>
           </aside>
 
           {/* 📄 Page content */}
-          <main className="flex-1 p-6">{children}</main>
+          <main className="flex-1 p-6 relative">
+            {/* 👤 Top-right user/signin buttons */}
+            {/* 👤 Top-right user/signin/logout */}
+          <div className="absolute top-4 right-4 flex gap-4 items-center z-50">
+            {!isSignedIn ? (
+            <>
+            <SignInButton>
+             <Button variant="outline" size="sm">Sign In</Button>
+            </SignInButton>
+            <SignUpButton>
+             <Button variant="default" size="sm">Sign Up</Button>
+            </SignUpButton>
+            </>
+            ) : (
+           <div className="flex items-center gap-2">
+            <UserButton afterSignOutUrl="/sign-in" />
+             <span className="hidden sm:inline font-medium">Profile</span>
+            <SignOutButton>
+            <Button variant="destructive" size="sm">Logout</Button>
+            </SignOutButton>
+            </div>
+            )}
+          </div>
+
+
+            {children}
+          </main>
         </div>
       </ThemeProvider>
     </ClerkProvider>

@@ -27,16 +27,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 px-6 py-10">
-      
-      <div className="absolute top-6 right-6 flex gap-4">
-        <SignInButton>
-        <Button variant="outline" size="sm">Sign In</Button>
-        </SignInButton>
-        <SignUpButton>
-        <Button variant="default" size="sm">Sign Up</Button>
-        </SignUpButton>
-      </div>
-
 
       {/* 🌗 Theme Toggle (top-right, NOT navbar) */}
       <div className="flex justify-end max-w-5xl mx-auto">
