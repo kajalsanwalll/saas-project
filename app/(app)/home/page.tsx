@@ -5,7 +5,7 @@ import VideoCard from "@/components/VideoCard";
 import { Video } from "@/types";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { UploadCloud, Video as VideoIcon, ShieldCheck, Moon, Sun } from "lucide-react";
@@ -13,6 +13,10 @@ import { UploadCloud, Video as VideoIcon, ShieldCheck, Moon, Sun } from "lucide-
 export default function HomePage() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  // Clerk user
+  const { user } = useUser();
+  const userId = user?.id; // current logged-in user
 
   // Video state
   const [videos, setVideos] = useState<Video[]>([]);
@@ -24,10 +28,16 @@ export default function HomePage() {
     setMounted(true);
   }, []);
 
-  // Fetch videos
+  // Fetch videos for current user
   const fetchVideos = useCallback(async () => {
+    if (!userId) {
+      setVideos([]);
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await axios.get("/api/videos");
+      const response = await axios.get(`/api/videos?userId=${userId}`);
       if (Array.isArray(response.data)) {
         setVideos(response.data);
       } else {
@@ -39,7 +49,7 @@ export default function HomePage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     fetchVideos();
@@ -53,15 +63,16 @@ export default function HomePage() {
     link.setAttribute("target", "_blank");
     document.body.appendChild(link);
     link.click();
-     if (link.parentNode) {
-     link.parentNode.removeChild(link);
-  }
+    if (link.parentNode) {
+      link.parentNode.removeChild(link);
+    }
   }, []);
 
   if (!mounted) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 px-6 py-10">
+      
       {/* 🌗 Theme Toggle */}
       <div className="flex justify-end max-w-5xl mx-auto mb-8">
         <Button
@@ -99,28 +110,26 @@ export default function HomePage() {
       </section>
 
       {/* Video Listing */}
-      {videos.length > 0 && (
-      <section className="mx-auto max-w-5xl mt-16">
-        <h2 className="text-2xl font-bold mb-4 text-center">Videos</h2>
+      {userId && (
+        <>
+          {loading && <div className="text-center text-lg mt-16">Loading...</div>}
+          {error && <div className="text-center text-red-500 mt-16">{error}</div>}
 
-        {loading ? (
-          <div className="text-center text-lg">Loading...</div>
-        ) : error ? (
-          <div className="text-center text-red-500">{error}</div>
-        ) : videos.length === 0 ? (
-          <div className="text-center text-lg text-gray-500">No videos available</div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {videos.map((video) => (
-              <VideoCard
-                key={video.id}
-                video={video}
-                onDownload={handleDownload}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+          {!loading && !error && videos.length > 0 && (
+            <section className="mx-auto max-w-5xl mt-16">
+              <h2 className="text-2xl font-bold mb-4 text-center">Your Videos</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {videos.map((video) => (
+                  <VideoCard
+                    key={video.id}
+                    video={video}
+                    onDownload={handleDownload}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
 
       {/* Features */}
@@ -155,7 +164,6 @@ export default function HomePage() {
           </CardContent>
         </Card>
       </section>
-
     </div>
   );
 }

@@ -87,7 +87,7 @@ export default function SocialShare() {
 
 return (
   <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-black to-zinc-900 flex items-center justify-center px-4">
-    <div className="w-full max-w-4xl">
+    <div className="w-full max-w-2xl">
       <h1 className="text-4xl font-bold text-center mb-8 text-white">
         Social Media Image Creator
       </h1>

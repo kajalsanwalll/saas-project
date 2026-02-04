@@ -107,7 +107,7 @@ function VideoUpload() {
             }`}
             disabled={isUploading}
           >
-            {isUploading ? "Uploading..." : "Upload Video"}
+            {isUploading ? "Uploading...   Find your Compressed Video on Home!" : "Upload Video"}
           </button>
         </form>
       </div>
