@@ -12,8 +12,8 @@ const isPublicApiRoute = createRouteMatcher([
   "/api/videos"
 ])
 
-export default clerkMiddleware((auth, req) => {
-  const { userId } = auth();
+export default clerkMiddleware(async (auth, req) => {
+  const { userId } = await auth();
   const currentUrl = new URL(req.url)
 
   // ✅ Do NOT redirect API routes — let them handle auth themselves
