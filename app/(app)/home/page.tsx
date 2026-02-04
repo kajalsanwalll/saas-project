@@ -53,7 +53,9 @@ export default function HomePage() {
     link.setAttribute("target", "_blank");
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+     if (link.parentNode) {
+     link.parentNode.removeChild(link);
+  }
   }, []);
 
   if (!mounted) return null;
@@ -97,6 +99,7 @@ export default function HomePage() {
       </section>
 
       {/* Video Listing */}
+      {videos.length > 0 && (
       <section className="mx-auto max-w-5xl mt-16">
         <h2 className="text-2xl font-bold mb-4 text-center">Videos</h2>
 
@@ -118,6 +121,7 @@ export default function HomePage() {
           </div>
         )}
       </section>
+      )}
 
       {/* Features */}
       <section className="mx-auto mt-20 grid max-w-5xl gap-6 sm:grid-cols-3">
