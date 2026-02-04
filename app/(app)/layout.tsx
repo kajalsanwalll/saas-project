@@ -55,7 +55,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <div className="flex min-h-screen bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 relative">
           
-          {/* 🧭 Sidebar */}
+          {/*  Sidebar */}
           <aside
             className={`border-r border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-950/70 backdrop-blur transition-all duration-300
             ${collapsed ? "w-20" : "w-64"}`}
@@ -104,10 +104,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
           </aside>
 
-          {/* 📄 Page content */}
+          {/*  Page content */}
           <main className="flex-1 p-6 relative">
 
-            {/* 👤 Top-right user/signin/logout */}
+            {/*  Top-right user/signin/logout */}
           <div className="absolute top-4 right-4 flex gap-4 items-center z-50">
             {!isSignedIn ? (
             <>
