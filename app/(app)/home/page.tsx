@@ -1,14 +1,21 @@
 "use client";
+
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import VideoCard from "@/components/VideoCard";
 import { Video } from "@/types";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { UploadCloud, Video as VideoIcon, ShieldCheck, Moon, Sun } from "lucide-react";
+import {
+  UploadCloud,
+  Video as VideoIcon,
+  ShieldCheck,
+  Moon,
+  Sun,
+} from "lucide-react";
 
 export default function HomePage() {
   const { theme, setTheme } = useTheme();
@@ -16,7 +23,7 @@ export default function HomePage() {
 
   // Clerk user
   const { user } = useUser();
-  const userId = user?.id; // current logged-in user
+  const userId = user?.id;
 
   // Video state
   const [videos, setVideos] = useState<Video[]>([]);
@@ -63,107 +70,119 @@ export default function HomePage() {
     link.setAttribute("target", "_blank");
     document.body.appendChild(link);
     link.click();
-    if (link.parentNode) {
-      link.parentNode.removeChild(link);
-    }
+    link.remove();
   }, []);
 
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 px-6 py-10">
-      
-      {/* 🌗 Theme Toggle */}
-      <div className="flex justify-end max-w-5xl mx-auto mb-8">
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-2"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        >
-          {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
-          {theme === "dark" ? "Light" : "Dark"}
-        </Button>
-      </div>
-
-      {/* Hero */}
-      <section className="mx-auto max-w-5xl text-center mt-0">
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-          Upload, Optimize & Share Videos
-        </h1>
-
-        <p className="mt-4 text-muted-foreground text-lg">
-          A secure SaaS platform to upload videos, process them in the cloud,
-          and access them anywhere.
-        </p>
-
-        <div className="mt-8 flex justify-center gap-4">
-          <Link href="/video-upload">
-            <Button size="lg">Upload Video</Button>
-          </Link>
-          <Link href="/social-share">
-            <Button size="lg" variant="outline">
-              Social Share
-            </Button>
-          </Link>
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 px-6 py-10">
+      {/* MAIN CONTENT */}
+      <main className="flex-1">
+        {/* 🌗 Theme Toggle */}
+        <div className="flex justify-end max-w-5xl mx-auto mb-8">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            {theme === "dark" ? "Light" : "Dark"}
+          </Button>
         </div>
-      </section>
 
-      {/* Video Listing */}
-      {userId && (
-        <>
-          {loading && <div className="text-center text-lg mt-16">Loading...</div>}
-          {error && <div className="text-center text-red-500 mt-16">{error}</div>}
+        {/* Hero */}
+        <section className="mx-auto max-w-5xl text-center">
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            Upload, Optimize & Share Videos
+          </h1>
 
-          {!loading && !error && videos.length > 0 && (
-            <section className="mx-auto max-w-5xl mt-16">
-              <h2 className="text-2xl font-bold mb-4 text-center">Your Videos</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {videos.map((video) => (
-                  <VideoCard
-                    key={video.id}
-                    video={video}
-                    onDownload={handleDownload}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-        </>
-      )}
+          <p className="mt-4 text-muted-foreground text-lg">
+            A secure SaaS platform to upload videos, process them in the cloud,
+            and access them anywhere.
+          </p>
 
-      {/* Features */}
-      <section className="mx-auto mt-20 grid max-w-5xl gap-6 sm:grid-cols-3">
-        <Card className="rounded-2xl shadow-sm hover:shadow-md transition">
-          <CardContent className="p-6 text-center">
-            <UploadCloud className="mx-auto mb-4 h-10 w-10" />
-            <h3 className="font-semibold text-lg">Fast Uploads</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Upload large videos seamlessly using Cloudinary.
-            </p>
-          </CardContent>
-        </Card>
+          <div className="mt-8 flex justify-center gap-4">
+            <Link href="/video-upload">
+              <Button size="lg">Upload Video</Button>
+            </Link>
+            <Link href="/social-share">
+              <Button size="lg" variant="outline">
+                Social Share
+              </Button>
+            </Link>
+          </div>
+        </section>
 
-        <Card className="rounded-2xl shadow-sm hover:shadow-md transition">
-          <CardContent className="p-6 text-center">
-            <VideoIcon className="mx-auto mb-4 h-10 w-10" />
-            <h3 className="font-semibold text-lg">Video Management</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              View, organize, and manage all your uploaded videos.
-            </p>
-          </CardContent>
-        </Card>
+        {/* Video Listing */}
+        {userId && (
+          <>
+            {loading && (
+              <div className="text-center text-lg mt-16">Loading...</div>
+            )}
+            {error && (
+              <div className="text-center text-red-500 mt-16">{error}</div>
+            )}
 
-        <Card className="rounded-2xl shadow-sm hover:shadow-md transition">
-          <CardContent className="p-6 text-center">
-            <ShieldCheck className="mx-auto mb-4 h-10 w-10" />
-            <h3 className="font-semibold text-lg">Secure by Default</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Authentication powered by Clerk.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
+            {!loading && !error && videos.length > 0 && (
+              <section className="mx-auto max-w-5xl mt-16">
+                <h2 className="text-2xl font-bold mb-4 text-center">
+                  Your Videos
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {videos.map((video) => (
+                    <VideoCard
+                      key={video.id}
+                      video={video}
+                      onDownload={handleDownload}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+          </>
+        )}
+
+        {/* Features */}
+        <section className="mx-auto mt-20 grid max-w-5xl gap-6 sm:grid-cols-3">
+          <Card className="rounded-2xl shadow-sm hover:shadow-md transition">
+            <CardContent className="p-6 text-center">
+              <UploadCloud className="mx-auto mb-4 h-10 w-10" />
+              <h3 className="font-semibold text-lg">Fast Uploads</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Upload large videos seamlessly using Cloudinary.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl shadow-sm hover:shadow-md transition">
+            <CardContent className="p-6 text-center">
+              <VideoIcon className="mx-auto mb-4 h-10 w-10" />
+              <h3 className="font-semibold text-lg">Video Management</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                View, organize, and manage all your uploaded videos.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl shadow-sm hover:shadow-md transition">
+            <CardContent className="p-6 text-center">
+              <ShieldCheck className="mx-auto mb-4 h-10 w-10" />
+              <h3 className="font-semibold text-lg">Secure by Default</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Authentication powered by Clerk.
+              </p>
+            </CardContent>
+          </Card>
+        </section>
+      </main>
+
+      {/* FOOTER */}
+      <footer className="w-full py-4 text-center text-xs text-muted-foreground opacity-80">
+        Made with ❤️, caffeine ☕, and a lot of 🐞 by{" "}
+        <span className="font-medium">Kajal Sanwal</span>
+      </footer>
     </div>
   );
 }
