@@ -106,7 +106,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
           {/* 📄 Page content */}
           <main className="flex-1 p-6 relative">
-            {/* 👤 Top-right user/signin buttons */}
+
             {/* 👤 Top-right user/signin/logout */}
           <div className="absolute top-4 right-4 flex gap-4 items-center z-50">
             {!isSignedIn ? (
@@ -120,13 +120,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </>
             ) : (
            <div className="flex items-center gap-2">
-            <UserButton afterSignOutUrl="/sign-in" />
+            <UserButton
+             afterSignOutUrl="/sign-in"
+             appearance={{
+             elements: {
+              userButtonAvatarBox: "h-8 w-8", // smaller avatar
+             },
+             }}
+             />
              <span className="hidden sm:inline font-medium">Profile</span>
             <SignOutButton>
-            <Button variant="destructive" size="sm">Logout</Button>
+             <Button variant="destructive" size="sm" className="px-2 py-1 text-xs">
+              Logout
+             </Button>
             </SignOutButton>
             </div>
-            )}
+           )}
           </div>
 
 
