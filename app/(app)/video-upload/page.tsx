@@ -3,7 +3,6 @@ import React, {useState} from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { NextResponse } from 'next/server';
-import { error } from 'console';
 
 function VideoUpload() {
   
@@ -32,7 +31,7 @@ function VideoUpload() {
           status:401
         }
       )  */
-      console.log("File size too large!",error);
+      console.log("File size too large!",Error);
       
      }
 

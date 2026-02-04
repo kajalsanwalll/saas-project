@@ -45,6 +45,12 @@ export default function SocialShare() {
         body: formData
       })
 
+      if (response.status === 401) {
+       setIsUploading(false);
+       window.location.href = "/sign-in";
+       return;
+      }
+
 
       if(!response.ok) throw new Error("Failed to upload image!")
 
@@ -80,81 +86,96 @@ export default function SocialShare() {
     } )
   }
 
-  return (
-    <div className='container mx-auto p-4 max-w-4xl'>
-      <h1 className='text-3xl font-bold mb-6 text-center'>Social Media Image Creator</h1>
+return (
+  <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-black to-zinc-900 flex items-center justify-center px-4">
+    <div className="w-full max-w-4xl">
+      <h1 className="text-4xl font-bold text-center mb-8 text-white">
+        Social Media Image Creator
+      </h1>
 
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl p-6">
+        <h2 className="text-xl font-semibold mb-4 text-white">
+          Upload an Image
+        </h2>
 
-      <div className='card'>
-        <div className='card-body'>
-          <h2 className='card-title mb-4'>Upload an Image</h2>
-          <div className='form-control'>
-             <label className="label">
-              <span className="label-text">Choose an image file</span>
-             </label>
-             <input type='file' onChange={handleFileUpload} 
-              className='file-input file-input-bordered file-input-primary w-full'></input>
-             </div>
+        {/* Upload box */}
+        <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-zinc-700 rounded-xl cursor-pointer hover:border-primary transition">
+          <span className="text-zinc-400 mb-2">
+            Click to upload an image
+          </span>
+          <input
+            type="file"
+            className="hidden"
+            onChange={handleFileUpload}
+          />
+        </label>
 
-             {isUploading && (
-              <div className='mt-4'>
-                <progress className='progress progress-primary w-full'></progress>
-                </div>
-             )}
+        {isUploading && (
+          <div className="mt-4">
+            <progress className="progress progress-primary w-full" />
+          </div>
+        )}
 
-             {uploadedImage && (
-              <div className='mt-6'>
-                <h2 className='card-title mb-4'> Select Social Media Format</h2>
-                <div className='form-control'>
-                  <select
-                   className='select select-bordered w-full'
-                   value={selectedFormat}
-                   onChange={(e) => 
-                    setSelectedFormat(e.target.value as SocialFormat)
-                   }
-                  >
-                    {Object.keys(socialFormats).map((format) => (
-                      <option key={format} value={format}>
-                        {format}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+        {uploadedImage && (
+          <div className="mt-8">
+            <h2 className="text-lg font-semibold mb-3 text-white">
+              Select Format
+            </h2>
 
-                <div className='mt-6 relative'>
-                  <h3 className='text-lg font-semibold mb-2'>Preview:</h3>
-                  <div className='flex justify-center'>
-                    {isTransforming && (
-                      <div className='absolute inset-0 flex items-center justify-center bg-base-100 bg-opacity-50 z-10'>
-                        <span className='loading loading-spinner loading-lg'></span>
-                      </div>
-                    )}
-                    <CldImage
-                      width={socialFormats[selectedFormat].width}
-                      height={socialFormats[selectedFormat].height}
-                      src={uploadedImage}
-                      sizes='100vw'
-                      alt='Transformed Image'
-                      crop="fill"
-                      aspectRatio={socialFormats[selectedFormat].aspectRatio}
-                      gravity='auto'
-                      ref={imageRef}
-                      onLoad={() => setIsTransforming(false)}
-                      />
+            <select
+              className="select select-bordered w-full bg-zinc-800 text-white border-zinc-700"
+              value={selectedFormat}
+              onChange={(e) =>
+                setSelectedFormat(e.target.value as SocialFormat)
+              }
+            >
+              {Object.keys(socialFormats).map((format) => (
+                <option key={format} value={format}>
+                  {format}
+                </option>
+              ))}
+            </select>
+
+            {/* Preview */}
+            <div className="mt-8 relative">
+              <h3 className="text-lg font-semibold mb-2 text-white">
+                Preview
+              </h3>
+
+              <div className="relative flex justify-center rounded-xl overflow-hidden border border-zinc-800">
+                {isTransforming && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
+                    <span className="loading loading-spinner loading-lg" />
                   </div>
-                  
-                  </div>  
+                )}
 
-                  <div className='card-actions justify-end mt-6'>
-                    <button className='btn btn-primary' onClick={handleDownload}>
-                      Download for {selectedFormat}
-                    </button>
-                  </div>
-                  </div>
-             )}
-        </div>
+                <CldImage
+                  width={socialFormats[selectedFormat].width}
+                  height={socialFormats[selectedFormat].height}
+                  src={uploadedImage}
+                  alt="Preview"
+                  crop="fill"
+                  gravity="auto"
+                  aspectRatio={socialFormats[selectedFormat].aspectRatio}
+                  ref={imageRef}
+                  onLoad={() => setIsTransforming(false)}
+                  className="rounded-xl"
+                />
+              </div>
+            </div>
 
+            {/* Download */}
+            <div className="mt-6 flex justify-end">
+              <button
+                className="btn btn-primary px-6"
+                onClick={handleDownload}
+              >
+                Download
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
-  )
-}
+  </div>
+)};

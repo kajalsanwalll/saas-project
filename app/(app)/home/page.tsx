@@ -1,10 +1,112 @@
-"use client"
-import React from 'react'
+"use client";
 
-function Home() {
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useTheme } from "next-themes";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+import {
+  UploadCloud,
+  Video,
+  ShieldCheck,
+  Moon,
+  Sun,
+} from "lucide-react";
+
+export default function HomePage() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
-    <div>Home</div>
-  )
-}
+    <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 px-6 py-10">
+      
+      <div className="absolute top-6 right-6 flex gap-4">
+        <SignInButton>
+        <Button variant="outline" size="sm">Sign In</Button>
+        </SignInButton>
+        <SignUpButton>
+        <Button variant="default" size="sm">Sign Up</Button>
+        </SignUpButton>
+      </div>
 
-export default Home
+
+      {/* 🌗 Theme Toggle (top-right, NOT navbar) */}
+      <div className="flex justify-end max-w-5xl mx-auto">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        >
+          {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+          {theme === "dark" ? "Light" : "Dark"}
+        </Button>
+      </div>
+
+      {/* Hero */}
+      <section className="mx-auto max-w-5xl text-center mt-12">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+          Upload, Optimize & Share Videos
+        </h1>
+
+        <p className="mt-4 text-muted-foreground text-lg">
+          A secure SaaS platform to upload videos, process them in the cloud,
+          and access them anywhere.
+        </p>
+
+        <div className="mt-8 flex justify-center gap-4">
+          <Link href="/video-upload">
+            <Button size="lg">Upload Video</Button>
+          </Link>
+
+          <Link href="/social-share">
+            <Button size="lg" variant="outline">
+              Social Share
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="mx-auto mt-20 grid max-w-5xl gap-6 sm:grid-cols-3">
+        <Card className="rounded-2xl shadow-sm hover:shadow-md transition">
+          <CardContent className="p-6 text-center">
+            <UploadCloud className="mx-auto mb-4 h-10 w-10" />
+            <h3 className="font-semibold text-lg">Fast Uploads</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Upload large videos seamlessly using Cloudinary.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl shadow-sm hover:shadow-md transition">
+          <CardContent className="p-6 text-center">
+            <Video className="mx-auto mb-4 h-10 w-10" />
+            <h3 className="font-semibold text-lg">Video Management</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              View, organize, and manage all your uploaded videos.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl shadow-sm hover:shadow-md transition">
+          <CardContent className="p-6 text-center">
+            <ShieldCheck className="mx-auto mb-4 h-10 w-10" />
+            <h3 className="font-semibold text-lg">Secure by Default</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Authentication powered by Clerk.
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+    </div>
+  );
+}
