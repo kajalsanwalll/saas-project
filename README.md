@@ -32,7 +32,16 @@ Authentication: Clerk
 
 Cloud Storage & Media Processing: Cloudinary (supports compression, resizing, and format conversions)
 
+Note
+---
+* This project allows users to download images in multiple social media formats (like Instagram post 1:1, Twitter/X formats, etc.) and also upload MP4 videos for compression.
 
+* The video compression maintains high quality while significantly improving speed compared to many existing platforms.
+
+* It’s a SaaS-based project — sign up and try it out ✨
+This is a demo project, so the database (NeonDB with Prisma) has limitations. Videos larger than 70 MB cannot be uploaded due to cost constraints.
+
+* Please use smaller-sized videos while testing, and be patient after uploading — the app is connected to a real database, so processing may take some time.
 ⚡ Getting Started
 ---
 1. Clone the repo
