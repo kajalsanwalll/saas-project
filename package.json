@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "set CSS_TRANSFORMER_WASM=1 && set NEXT_DISABLE_TURBOPACK=1 && next dev",
     "build": "next build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "eslint"
   },
