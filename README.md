@@ -42,6 +42,7 @@ Note
 This is a demo project, so the database (NeonDB with Prisma) has limitations. Videos larger than 70 MB cannot be uploaded due to cost constraints.
 
 * Please use smaller-sized videos while testing, and be patient after uploading — the app is connected to a real database, so processing may take some time.
+
 ⚡ Getting Started
 ---
 1. Clone the repo
