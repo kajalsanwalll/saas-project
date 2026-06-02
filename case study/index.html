@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Video SaaS — Case Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #04060a;
+    --surface: #090d14;
+    --surface2: #0e1520;
+    --surface3: #131c2a;
+    --border: rgba(99,179,255,0.07);
+    --border2: rgba(99,179,255,0.13);
+    --blue: #4da6ff;
+    --blue-dim: rgba(77,166,255,0.12);
+    --blue-glow: rgba(77,166,255,0.06);
+    --cyan: #00e5ff;
+    --green: #00ffa3;
+    --amber: #ffb340;
+    --red: #ff5c5c;
+    --violet: #b87cff;
+    --text: #d8e8f8;
+    --muted: #6a84a0;
+    --muted2: #344660;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+  .ambient { position: fixed; border-radius: 50%; filter: blur(140px); pointer-events: none; z-index: 0; }
+  .a1 { width: 700px; height: 500px; top: -150px; right: -200px; background: rgba(77,166,255,0.09); }
+  .a2 { width: 400px; height: 400px; bottom: 100px; left: -100px; background: rgba(0,229,255,0.06); }
+  .a3 { width: 300px; height: 300px; top: 50%; left: 50%; background: rgba(184,124,255,0.05); }
+
+  .wrap { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; padding: 0 36px 120px; }
+
+  /* ── HERO ── */
+  .hero { padding: 88px 0 64px; border-bottom: 1px solid var(--border); }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--cyan); background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2); padding: 5px 12px; border-radius: 3px; margin-bottom: 28px;
+  }
+  .hero-tag::before { content: '⬡'; }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(46px, 7.5vw, 78px); font-weight: 700;
+    line-height: 1.0; letter-spacing: -0.04em; margin-bottom: 20px;
+  }
+  h1 .w { color: #fff; }
+  h1 .a {
+    background: linear-gradient(120deg, var(--blue) 0%, var(--cyan) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  .hero-sub { font-size: 16px; color: var(--muted); max-width: 560px; line-height: 1.75; }
+
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    padding: 4px 10px; border-radius: 3px;
+    border: 1px solid var(--border2); color: var(--muted); background: var(--surface);
+  }
+  .pill.t { color: var(--blue); border-color: rgba(77,166,255,0.2); background: rgba(77,166,255,0.06); }
+  .pill.r { color: var(--amber); border-color: rgba(255,179,64,0.2); background: rgba(255,179,64,0.06); }
+  .pill.s { color: var(--green); border-color: rgba(0,255,163,0.2); background: rgba(0,255,163,0.06); }
+
+  /* ── SECTIONS ── */
+  .section { margin-top: 76px; }
+
+  .section-label {
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted2); margin-bottom: 28px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  h2 {
+    font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 600;
+    letter-spacing: -0.02em; margin-bottom: 14px; color: #fff;
+  }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  p { color: var(--muted); font-size: 14.5px; line-height: 1.8; margin-bottom: 12px; }
+  p:last-child { margin-bottom: 0; }
+  p strong { color: var(--text); font-weight: 500; }
+
+  code {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    background: var(--surface3); border: 1px solid var(--border);
+    padding: 2px 6px; border-radius: 3px; color: var(--cyan);
+  }
+
+  /* ── STACK GRID ── */
+  .stack-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden; margin-top: 8px;
+  }
+  .stack-cell { background: var(--surface); padding: 20px 22px; transition: background 0.2s; }
+  .stack-cell:hover { background: var(--surface2); }
+  .stack-cell .layer {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 7px;
+  }
+  .stack-cell .tn { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .stack-cell p { font-size: 13px; margin: 0; }
+  .layer.fe { color: var(--blue); }
+  .layer.api { color: var(--cyan); }
+  .layer.db { color: var(--green); }
+  .layer.auth { color: var(--violet); }
+  .layer.media { color: var(--amber); }
+  .layer.orm { color: var(--red); }
+
+  /* ── FLOW ── */
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 0; margin: 14px 0; }
+  .fn { background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 7px 13px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text); white-space: nowrap; }
+  .fa { color: var(--muted2); font-size: 13px; padding: 0 6px; flex-shrink: 0; }
+
+  /* ── TRADEOFF TABLE ── */
+  .tradeoff { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+  .tr { display: grid; grid-template-columns: 130px 1fr 1fr; border-bottom: 1px solid var(--border); }
+  .tr:last-child { border-bottom: none; }
+  .tr.hdr { background: var(--surface2); }
+  .tc { padding: 12px 16px; font-size: 13px; border-right: 1px solid var(--border); }
+  .tc:last-child { border-right: none; }
+  .tr.hdr .tc { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted2); }
+  .tc .yes { color: var(--green); font-weight: 500; }
+  .tc .no  { color: var(--muted); font-size: 12px; }
+  .tc .dim { color: var(--muted2); font-size: 11px; display: block; margin-top: 2px; }
+
+  /* ── Q&A ── */
+  .qa-list { display: flex; flex-direction: column; gap: 2px; }
+  .qa-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: border-color 0.2s; }
+  .qa-item:hover { border-color: var(--border2); }
+  .qa-item.open { border-color: rgba(77,166,255,0.25); }
+  .qa-q { display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; cursor: pointer; user-select: none; }
+  .qa-q:hover { background: var(--surface2); }
+  .qa-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted2); padding-top: 3px; min-width: 22px; flex-shrink: 0; }
+  .qa-text { font-size: 13.5px; font-weight: 500; color: var(--text); flex: 1; line-height: 1.5; }
+  .qa-arrow { width: 16px; flex-shrink: 0; margin-top: 2px; color: var(--muted2); transition: transform 0.22s; font-size: 11px; }
+  .qa-item.open .qa-arrow { transform: rotate(90deg); color: var(--blue); }
+  .qa-a { display: none; padding: 0 20px 20px 56px; }
+  .qa-item.open .qa-a { display: block; }
+  .qa-a p { font-size: 13.5px; }
+  .qa-a .atag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
+  .qa-a ul { list-style: none; margin: 8px 0; display: flex; flex-direction: column; gap: 6px; }
+  .qa-a ul li { font-size: 13.5px; color: var(--muted); padding-left: 16px; position: relative; line-height: 1.65; }
+  .qa-a ul li::before { content: '›'; position: absolute; left: 0; color: var(--blue); font-size: 14px; top: 1px; }
+  .qa-a ul li strong { color: var(--text); font-weight: 500; }
+
+  /* ── CATEGORY BADGE ── */
+  .cb { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 7px; border-radius: 3px; margin-right: 8px; }
+  .cb.design   { background: rgba(77,166,255,0.1); color: var(--blue); border: 1px solid rgba(77,166,255,0.2); }
+  .cb.perf     { background: rgba(0,255,163,0.08); color: var(--green); border: 1px solid rgba(0,255,163,0.18); }
+  .cb.scale    { background: rgba(255,179,64,0.08); color: var(--amber); border: 1px solid rgba(255,179,64,0.18); }
+  .cb.security { background: rgba(255,92,92,0.08); color: var(--red); border: 1px solid rgba(255,92,92,0.18); }
+  .cb.trade    { background: rgba(184,124,255,0.08); color: var(--violet); border: 1px solid rgba(184,124,255,0.18); }
+  .cb.db       { background: rgba(0,229,255,0.08); color: var(--cyan); border: 1px solid rgba(0,229,255,0.18); }
+
+  /* ── HIGHLIGHT ── */
+  .hl { border-left: 2px solid var(--blue); background: var(--blue-glow); padding: 13px 17px; border-radius: 0 7px 7px 0; margin: 13px 0; }
+  .hl p { font-size: 13.5px; margin: 0; }
+
+  /* ── SCHEMA BOX ── */
+  .schema {
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 8px; padding: 16px 20px; margin: 14px 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text);
+    line-height: 1.9;
+  }
+  .schema .field { color: var(--cyan); }
+  .schema .type  { color: var(--amber); }
+  .schema .note  { color: var(--muted2); }
+  .schema .model { color: var(--violet); font-weight: 500; }
+
+  /* ── FOOTER ── */
+  .footer { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .footer-l { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted2); }
+  .footer-r { font-size: 13px; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 0 18px 80px; }
+    .stack-grid { grid-template-columns: 1fr; }
+    .tr { grid-template-columns: 90px 1fr 1fr; }
+    h1 { font-size: 38px; }
+  }
+</style>
+</head>
+<body>
+<div class="ambient a1"></div>
+<div class="ambient a2"></div>
+<div class="ambient a3"></div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">SDE Interview Case Study · v2</div>
+    <h1><span class="w">Video</span> <span class="a">SaaS</span></h1>
+    <p class="hero-sub">A cloud-native video processing platform — upload, auto-compress, and manage videos. Image transformation tool for social media formats. Built production-ready with Clerk auth, PostgreSQL, Prisma, and Cloudinary.</p>
+    <div class="hero-meta">
+      <span class="pill t">Next.js 16</span>
+      <span class="pill t">TypeScript</span>
+      <span class="pill t">Prisma ORM</span>
+      <span class="pill t">PostgreSQL</span>
+      <span class="pill t">Cloudinary</span>
+      <span class="pill t">Clerk Auth</span>
+      <span class="pill r">Solo project</span>
+      <span class="pill s">SaaS / Full-stack</span>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="section">
+    <div class="section-label">01 — Overview</div>
+    <h2>What does it do?</h2>
+    <p>Video SaaS has two core features: a <strong>Video Upload & Compression pipeline</strong> where users upload MP4 files (≤70 MB), Cloudinary auto-compresses them server-side, and the compressed version is stored with metadata in PostgreSQL via Prisma. Users see only their own videos on the dashboard.</p>
+    <p>The second feature is a <strong>Social Media Image Creator</strong> — users upload an image and pick from preset formats (Instagram, Twitter, Facebook). Cloudinary's transformation API resizes and crops the image on-the-fly; the browser previews it and downloads the final PNG without any server round-trip for the transformation itself.</p>
+    <p>Auth is handled entirely by <strong>Clerk</strong> — no password storage, no session tables, no custom auth logic. The <code>userId</code> from Clerk's JWT is the foreign key that links videos to users in the database.</p>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="section">
+    <div class="section-label">02 — Architecture</div>
+    <h2>Tech stack breakdown</h2>
+    <div class="stack-grid">
+      <div class="stack-cell">
+        <div class="layer fe">Frontend</div>
+        <div class="tn">Next.js 16 + React 19</div>
+        <p>App Router, client components. shadcn/ui + DaisyUI for components. <code>next-themes</code> for dark/light toggle.</p>
+      </div>
+      <div class="stack-cell">
+        <div class="layer api">API Layer</div>
+        <div class="tn">Next.js Route Handlers</div>
+        <p>Three endpoints: <code>/api/image-upload</code>, <code>/api/video-upload</code>, <code>/api/videos</code>. All run on Node.js runtime (explicit <code>export const runtime = "nodejs"</code>).</p>
+      </div>
+      <div class="stack-cell">
+        <div class="layer db">Database</div>
+        <div class="tn">PostgreSQL + Prisma</div>
+        <p>Relational DB via Prisma ORM. <code>PrismaPg</code> adapter with a connection pool (<code>pg.Pool</code>). Video metadata stored with <code>userId</code> FK from Clerk.</p>
+      </div>
+      <div class="stack-cell">
+        <div class="layer auth">Auth</div>
+        <div class="tn">Clerk</div>
+        <p>Managed auth — no custom JWT, no password hashing. <code>auth()</code> in server components, <code>getAuth(req)</code> in route handlers, <code>useUser()</code> on the client.</p>
+      </div>
+      <div class="stack-cell">
+        <div class="layer media">Media Pipeline</div>
+        <div class="tn">Cloudinary</div>
+        <p>Videos: server-side upload stream → auto quality + MP4 format. Images: <code>CldImage</code> with <code>crop=fill, gravity=auto</code> for smart AI-based cropping.</p>
+      </div>
+      <div class="stack-cell">
+        <div class="layer orm">ORM / DB Client</div>
+        <div class="tn">Prisma 7 + pg adapter</div>
+        <p>Global singleton pattern prevents connection exhaustion in serverless. <code>PrismaPg</code> uses the native <code>pg</code> driver (better performance than default Prisma connector).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA MODEL -->
+  <div class="section">
+    <div class="section-label">03 — Data Model</div>
+    <h2>Prisma schema (Video model)</h2>
+    <div class="schema">
+      <span class="model">model Video</span> {<br>
+      &nbsp;&nbsp;<span class="field">id</span>             <span class="type">String</span>   <span class="note">@id @default(cuid())</span><br>
+      &nbsp;&nbsp;<span class="field">title</span>          <span class="type">String</span><br>
+      &nbsp;&nbsp;<span class="field">description</span>    <span class="type">String?</span><br>
+      &nbsp;&nbsp;<span class="field">publicId</span>       <span class="type">String</span>   <span class="note">// Cloudinary public_id</span><br>
+      &nbsp;&nbsp;<span class="field">originalSize</span>   <span class="type">String</span>   <span class="note">// bytes, stored as string</span><br>
+      &nbsp;&nbsp;<span class="field">compressedSize</span> <span class="type">String</span>   <span class="note">// from result.bytes</span><br>
+      &nbsp;&nbsp;<span class="field">duration</span>       <span class="type">Float</span>    <span class="note">// seconds from Cloudinary</span><br>
+      &nbsp;&nbsp;<span class="field">userId</span>         <span class="type">String</span>   <span class="note">// Clerk userId FK</span><br>
+      &nbsp;&nbsp;<span class="field">createdAt</span>      <span class="type">DateTime</span> <span class="note">@default(now())</span><br>
+      }
+    </div>
+    <p>No <code>User</code> table — Clerk owns user identity. <code>userId</code> is a string (Clerk's <code>user_XXXX</code> format) stored directly. This means no JOIN needed to get user info alongside videos, but you can't enforce a DB-level FK constraint to a users table.</p>
+  </div>
+
+  <!-- REQUEST FLOW -->
+  <div class="section">
+    <div class="section-label">04 — Request Flow</div>
+    <h2>Video upload lifecycle</h2>
+    <div class="flow">
+      <div class="fn">User selects file</div><div class="fa">→</div>
+      <div class="fn">FormData POST</div><div class="fa">→</div>
+      <div class="fn">/api/video-upload</div><div class="fa">→</div>
+      <div class="fn">Clerk auth()</div><div class="fa">→</div>
+      <div class="fn">Buffer → Cloudinary stream</div><div class="fa">→</div>
+      <div class="fn">Prisma.video.create()</div><div class="fa">→</div>
+      <div class="fn">JSON response</div>
+    </div>
+    <p style="margin-top:12px">Image transformation flow (no DB write — entirely Cloudinary CDN):</p>
+    <div class="flow">
+      <div class="fn">User uploads image</div><div class="fa">→</div>
+      <div class="fn">/api/image-upload</div><div class="fa">→</div>
+      <div class="fn">Cloudinary → publicId</div><div class="fa">→</div>
+      <div class="fn">CldImage renders URL</div><div class="fa">→</div>
+      <div class="fn">Browser fetch → blob</div><div class="fa">→</div>
+      <div class="fn">Download PNG</div>
+    </div>
+    <div class="hl"><p>The image transformation happens entirely at the CDN layer — Cloudinary generates a transformed URL like <code>c_fill,g_auto,ar_1:1/publicId</code>. No server compute, no storage cost per transformation. Only the original is stored.</p></div>
+  </div>
+
+  <!-- TRADEOFFS -->
+  <div class="section">
+    <div class="section-label">05 — Trade-off Analysis</div>
+    <h2>Why this stack, not that?</h2>
+    <div class="tradeoff">
+      <div class="tr hdr">
+        <div class="tc">Decision</div>
+        <div class="tc">Chosen</div>
+        <div class="tc">Alternatives</div>
+      </div>
+      <div class="tr">
+        <div class="tc" style="font-size:12px;color:var(--muted)">Auth</div>
+        <div class="tc"><span class="yes">Clerk</span><span class="dim">No auth code to write, MFA out of box, JWT auto-managed</span></div>
+        <div class="tc"><span class="no">NextAuth: more config, need to store sessions. Custom JWT: secure but 200+ lines of auth logic. Overkill for MVP.</span></div>
+      </div>
+      <div class="tr">
+        <div class="tc" style="font-size:12px;color:var(--muted)">Database</div>
+        <div class="tc"><span class="yes">PostgreSQL</span><span class="dim">Relational fits video metadata with strict types, constraints, ordering</span></div>
+        <div class="tc"><span class="no">MongoDB: schema-flexible but video records are uniform — no benefit. DynamoDB: operational overhead without the scale need.</span></div>
+      </div>
+      <div class="tr">
+        <div class="tc" style="font-size:12px;color:var(--muted)">ORM</div>
+        <div class="tc"><span class="yes">Prisma 7</span><span class="dim">Type-safe queries, migration tooling, readable schema definition</span></div>
+        <div class="tc"><span class="no">Drizzle: lighter, faster, but less mature ecosystem. Raw SQL: maximum control but loses type safety at the query layer.</span></div>
+      </div>
+      <div class="tr">
+        <div class="tc" style="font-size:12px;color:var(--muted)">Video processing</div>
+        <div class="tc"><span class="yes">Cloudinary</span><span class="dim">Compression, CDN delivery, duration metadata — all free tier</span></div>
+        <div class="tc"><span class="no">FFmpeg on server: full control but CPU-intensive, blocks the Node.js runtime. AWS MediaConvert: robust but complex IAM + async polling required.</span></div>
+      </div>
+      <div class="tr">
+        <div class="tc" style="font-size:12px;color:var(--muted)">Image transform</div>
+        <div class="tc"><span class="yes">CldImage (CDN)</span><span class="dim">Zero server compute — transformation is a URL parameter</span></div>
+        <div class="tc"><span class="no">Sharp on server: perfect control but adds CPU cost per request and requires you to store transformed variants. Cloudinary does this for free.</span></div>
+      </div>
+      <div class="tr">
+        <div class="tc" style="font-size:12px;color:var(--muted)">DB connection</div>
+        <div class="tc"><span class="yes">pg.Pool + PrismaPg</span><span class="dim">Reuses connections across serverless invocations via global singleton</span></div>
+        <div class="tc"><span class="no">Default Prisma connector: creates new connections per invocation in serverless → connection exhaustion at scale. PgBouncer is the production fix.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAANG Q&A -->
+  <div class="section">
+    <div class="section-label">06 — Interview Questions</div>
+    <h2>Questions you'll be asked</h2>
+    <p style="margin-bottom:24px">Click to expand. Covers system design, security, scalability, and trade-offs — real patterns from Google, Meta, Amazon, and Microsoft loops.</p>
+
+    <div class="qa-list" id="qa">
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">01</span>
+          <span class="qa-text"><span class="cb design">Design</span>Walk me through the system architecture end to end.</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p>The app is a Next.js 16 monorepo with two user-facing features: video upload/management and social image transformation. The frontend is React 19 with client components for interactivity. The backend is three Next.js Route Handlers acting as REST endpoints — no separate server.</p>
+          <p>Auth is delegated entirely to Clerk — the <code>userId</code> from Clerk's session is used as a foreign key in PostgreSQL to associate videos with users. Media storage and processing is delegated to Cloudinary — the server streams file bytes to Cloudinary's upload API and saves the returned <code>publicId</code> and metadata to the database via Prisma.</p>
+          <p>The key architectural decision is <strong>offloading expensive work</strong> (encoding, transcoding, image transformation) to managed services, keeping the Next.js layer thin and stateless.</p>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">02</span>
+          <span class="qa-text"><span class="cb security">Security</span>The video upload API uses <code>getAuth(request)</code> but the videos GET endpoint reads userId from query params. What's the security issue?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p><strong>This is a real IDOR vulnerability (Insecure Direct Object Reference).</strong> The <code>/api/videos?userId=xyz</code> endpoint takes <code>userId</code> from the URL query string — anyone can substitute any userId and see another user's videos.</p>
+          <p>The correct fix is to read userId from the server-side Clerk session, never from client-supplied input:</p>
+          <ul>
+            <li>Add <code>const &#123; userId &#125; = await auth()</code> inside the GET handler</li>
+            <li>Remove the <code>userId</code> query param entirely</li>
+            <li>Query: <code>prisma.video.findMany(&#123; where: &#123; userId &#125; &#125;)</code> using the verified server-side userId</li>
+          </ul>
+          <div class="hl"><p><strong>FAANG signal:</strong> Mentioning IDOR by name and explaining why client-supplied identity is always untrusted shows security maturity. This is exactly the kind of self-aware bug identification interviewers at Google and Meta value.</p></div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">03</span>
+          <span class="qa-text"><span class="cb db">Database</span>Why PostgreSQL over MongoDB here? How does Prisma help?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p>Video metadata is highly structured and uniform — every record has the same fields: title, description, publicId, size, duration, userId. There's no variable schema benefit from a document database.</p>
+          <p>PostgreSQL gives me: strict column types (no accidental string where int expected), ordering guarantees, foreign key constraints, and powerful aggregation (e.g. total storage used per user with a single <code>SUM(compressedSize)</code>).</p>
+          <p>Prisma adds type safety at the query layer — the TypeScript types for the <code>Video</code> model are auto-generated from the schema, so any mismatch between query and model is a compile error, not a runtime bug. It also provides <strong>migration tooling</strong> (<code>prisma migrate dev</code>) which gives a version-controlled audit trail of schema changes.</p>
+          <p>The trade-off: Prisma adds a query translation layer which is ~5-10% slower than raw SQL. For this app that's irrelevant. At 100M+ rows I'd consider Drizzle or raw SQL for hot paths.</p>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">04</span>
+          <span class="qa-text"><span class="cb scale">Scalability</span>You call <code>prisma.$disconnect()</code> in every route handler's <code>finally</code> block. Why is this a problem?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p><strong>This is a real performance bug in the current code.</strong> Calling <code>$disconnect()</code> on every request tears down the database connection pool, then the next request has to re-establish it — adding 50-200ms of connection overhead per request.</p>
+          <p>The global singleton pattern already in <code>lib/prisma.ts</code> is meant to reuse the same Prisma client across requests. Disconnecting in the handler defeats this entirely.</p>
+          <ul>
+            <li><strong>Fix:</strong> Remove all <code>prisma.$disconnect()</code> calls from route handlers</li>
+            <li>Only disconnect in scripts (seed files, migration runners) that exit after completion</li>
+            <li>In production on serverless (Vercel), the process may be frozen between requests — the connection stays warm without needing manual lifecycle management</li>
+          </ul>
+          <div class="hl"><p>At scale the real fix is <strong>PgBouncer</strong> (a connection pooler that sits between your app and Postgres). Serverless functions can create hundreds of concurrent DB connections — PgBouncer pools them to a manageable number (e.g. 20) at the database level. Supabase and Neon have this built-in.</p></div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">05</span>
+          <span class="qa-text"><span class="cb perf">Performance</span>The video upload buffers the entire file into memory before streaming to Cloudinary. What's the problem and how do you fix it?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p>Current approach: <code>const bytes = await file.arrayBuffer()</code> → <code>Buffer.from(bytes)</code> → <code>uploadStream.end(buffer)</code>. This loads the <strong>entire file into Node.js heap memory</strong>. For a 70 MB file, that's 70 MB of RAM held per concurrent upload.</p>
+          <p>At 100 concurrent uploads that's 7 GB of RAM pressure — serverless functions typically have 128-512 MB limits. This will OOM crash.</p>
+          <p>Better approaches:</p>
+          <ul>
+            <li><strong>Presigned upload URLs:</strong> Generate a Cloudinary signed upload URL server-side and send it to the browser. The browser uploads <em>directly</em> to Cloudinary — the API server is completely out of the upload path. Zero memory cost, lower latency.</li>
+            <li><strong>Streaming pipe:</strong> If server-side upload is required, pipe the request body stream directly to Cloudinary's upload stream without buffering: <code>request.body.pipe(uploadStream)</code> — but Next.js route handlers don't expose a raw Node stream easily.</li>
+            <li><strong>Background job:</strong> Accept the file, store it in S3 temporarily, and process via a queue (BullMQ + Redis). Return a job ID immediately; client polls for completion.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">06</span>
+          <span class="qa-text"><span class="cb design">Design</span>How does Clerk auth work under the hood? How does the server verify a user's identity?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p>Clerk uses <strong>short-lived JWTs</strong> (session tokens) stored in an HTTP-only cookie. On every request, Clerk's middleware (configured in <code>middleware.ts</code>) intercepts the request, reads the cookie, and verifies the JWT signature against Clerk's public key (fetched from Clerk's JWKS endpoint).</p>
+          <p>In route handlers, <code>auth()</code> or <code>getAuth(request)</code> reads the already-verified session from the request context — it doesn't make a network call to Clerk on every request. The JWT verification is local (crypto operation), fast (~1ms).</p>
+          <ul>
+            <li><strong>Token refresh:</strong> Clerk rotates tokens automatically every 60 seconds. The client Clerk SDK handles silent refresh in the background.</li>
+            <li><strong>Revocation:</strong> JWTs can't be revoked mid-lifetime. Clerk's short expiry (60s) limits the blast radius of a stolen token.</li>
+            <li><strong>userId format:</strong> Clerk userIds are prefixed strings like <code>user_2abc...</code> — storing them as <code>String</code> in Prisma (not UUID) is intentional.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">07</span>
+          <span class="qa-text"><span class="cb scale">Scalability</span>How would you scale this to 1 million users uploading videos?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p>Current bottlenecks at that scale and the solutions:</p>
+          <ul>
+            <li><strong>Upload throughput:</strong> Move to presigned Cloudinary URLs — browser uploads directly to CDN, removing Next.js from the critical path entirely. API only handles metadata writes.</li>
+            <li><strong>Database connections:</strong> Add PgBouncer or use Neon/Supabase's built-in pooler. PostgreSQL max connections (~100) can't handle 1M users without pooling.</li>
+            <li><strong>Video processing queue:</strong> Cloudinary handles compression, but at scale you'd want async processing with status polling. Use a job queue (BullMQ + Redis on Upstash) to decouple upload from processing.</li>
+            <li><strong>Read scaling:</strong> The <code>/api/videos</code> endpoint hits DB on every page load. Add Redis caching per userId (TTL 30s) — most users don't upload every 30 seconds.</li>
+            <li><strong>Storage costs:</strong> At 1M users × 70MB avg = 70TB. Cloudinary pricing becomes significant. At this scale you'd move originals to S3 Glacier and serve only compressed versions via Cloudinary's fetch URL.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">08</span>
+          <span class="qa-text"><span class="cb perf">Performance</span>How does the social image transformation actually work? Does the server do any work per transformation?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p><strong>No — after the initial upload, all transformations are pure CDN.</strong> This is one of the best-designed parts of the app.</p>
+          <p>When the user selects "Instagram Square (1:1)", <code>CldImage</code> constructs a Cloudinary URL with transformation parameters baked in: something like <code>https://res.cloudinary.com/{cloud}/image/upload/c_fill,g_auto,ar_1:1,w_1080,h_1080/{publicId}</code>. The browser fetches this URL directly from Cloudinary's CDN edge.</p>
+          <ul>
+            <li><strong>First request:</strong> Cloudinary's origin server applies the transformation (AI gravity detection, smart crop), renders the result, caches it at the edge.</li>
+            <li><strong>Subsequent requests:</strong> Same URL hits CDN cache — zero compute. Sub-100ms global delivery.</li>
+            <li><strong>Download:</strong> The browser fetches the transformed image URL, converts to a blob, and triggers a local download — no server involved.</li>
+          </ul>
+          <div class="hl"><p>This is a perfect example of <strong>push work to the edge</strong>. The API server processes one upload; all transformations are free CDN operations. This is the scalability pattern FAANG engineers use for media delivery.</p></div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">09</span>
+          <span class="qa-text"><span class="cb security">Security</span>What are the other security issues you'd fix before going to production?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <ul>
+            <li><strong>File type validation:</strong> The video upload only checks <code>accept="video/*"</code> on the client. Server-side, we read the raw bytes — an attacker can send any file. Fix: check the file's magic bytes (first 4 bytes) server-side, or use a library like <code>file-type</code> to validate MIME type before uploading to Cloudinary.</li>
+            <li><strong>No file size check in API:</strong> The 70 MB limit is only enforced in the frontend UI. The route handler has no size check — a malicious client can POST a 2 GB file. Fix: add <code>if (file.size > MAX_SIZE) return 413</code> at the start of the handler.</li>
+            <li><strong>Cloudinary credentials in env:</strong> <code>NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME</code> is exposed to the browser (that's intentional for <code>CldImage</code>), but the API key and secret are server-only. This is correctly handled — worth verifying <code>.env.local</code> never commits to git.</li>
+            <li><strong>Rate limiting:</strong> No limit on how many videos a user can upload. A malicious user could exhaust your Cloudinary storage quota. Fix: add per-user rate limiting (e.g. 10 uploads/hour) using Upstash Redis with a sliding window.</li>
+            <li><strong>Error messages leak internals:</strong> <code>details: err.message</code> is returned in 500 responses. This can expose stack traces, file paths, or DB connection strings. Fix: log full error server-side, return generic message to client.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">10</span>
+          <span class="qa-text"><span class="cb trade">Trade-offs</span>Why use Clerk instead of building your own auth? What do you give up?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p><strong>What you gain:</strong> Zero auth code to write. MFA, social logins, device sessions, bot detection, and GDPR-compliant user data storage out of the box. Clerk's security team handles all auth vulnerabilities — no risk of implementing JWT rotation wrong, missing CSRF, or storing passwords with a weak hash.</p>
+          <p><strong>What you give up:</strong></p>
+          <ul>
+            <li><strong>Vendor lock-in:</strong> Your <code>userId</code> format (<code>user_XXX</code>) is Clerk-specific. Migrating to another auth provider requires updating every FK in your DB.</li>
+            <li><strong>Cost at scale:</strong> Clerk's free tier is generous (10K MAU), but at 100K MAU pricing kicks in. At large scale, custom auth is cheaper.</li>
+            <li><strong>No user table:</strong> User profile data (email, name, avatar) lives in Clerk, not your DB. Any feature needing user data requires a Clerk API call or webhook sync to your own DB.</li>
+            <li><strong>Cold start latency:</strong> Clerk's middleware runs on every request to verify the session. This adds a small overhead on serverless cold starts.</li>
+          </ul>
+          <div class="hl"><p>The right answer for an interview: "For an MVP or small team, Clerk is the correct trade-off — security is hard and auth bugs are catastrophic. At scale with a dedicated auth team, custom is worth it."</p></div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">11</span>
+          <span class="qa-text"><span class="cb design">Design</span>How would you add a video processing status tracker? (User sees progress while Cloudinary encodes)</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p>Currently the upload is synchronous — the client waits until Cloudinary finishes encoding, which can take 30+ seconds for a large video. This is a bad UX and risks request timeouts.</p>
+          <p>The right pattern is <strong>async job processing</strong>:</p>
+          <ul>
+            <li><strong>Step 1:</strong> API receives upload, stores file in S3 (fast), creates a <code>VideoJob</code> record in DB with status <code>PENDING</code>, returns <code>jobId</code> immediately (200ms response)</li>
+            <li><strong>Step 2:</strong> A background worker picks up the job from a queue (BullMQ + Redis), uploads to Cloudinary, waits for encoding</li>
+            <li><strong>Step 3:</strong> Worker updates <code>VideoJob.status = COMPLETE</code> and creates the <code>Video</code> record</li>
+            <li><strong>Client polling:</strong> Frontend polls <code>/api/jobs/:id</code> every 3 seconds, shows progress bar</li>
+            <li><strong>Better UX:</strong> Replace polling with Server-Sent Events (<code>EventSource</code>) — server pushes status updates as the job progresses. No wasted poll requests.</li>
+          </ul>
+          <p>This decouples upload latency from encoding latency and makes the system resilient — if encoding fails, the job can be retried without re-uploading the file.</p>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">12</span>
+          <span class="qa-text"><span class="cb db">Database</span>You store sizes as strings (<code>originalSize: String</code>). Why is that a problem?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <p><strong>Three concrete problems:</strong></p>
+          <ul>
+            <li><strong>Sorting is lexicographic, not numeric:</strong> <code>ORDER BY originalSize</code> would sort "9000000" after "10000000" alphabetically — wrong order</li>
+            <li><strong>Aggregation is broken:</strong> <code>SUM(originalSize)</code> returns null for a String column — you can't calculate "total storage used by this user" without casting</li>
+            <li><strong>No range queries:</strong> You can't write <code>WHERE originalSize > 50000000</code> efficiently on a string column — it does a string comparison, not numeric</li>
+          </ul>
+          <p><strong>Fix:</strong> Change schema to <code>originalSize BigInt</code> and <code>compressedSize BigInt</code>. Prisma represents BigInt as <code>BigInt</code> in TypeScript. The reason it was stored as String originally is that JavaScript's <code>Number</code> type loses precision for large integers (>2^53) — BigInt solves this correctly.</p>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">
+          <span class="qa-num">13</span>
+          <span class="qa-text"><span class="cb trade">Trade-offs</span>What would you change if starting this project from scratch?</span>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a">
+          <span class="atag">model answer</span>
+          <ul>
+            <li><strong>Fix IDOR immediately:</strong> The userId-from-query-param vulnerability is the most critical thing. I'd never ship this to production.</li>
+            <li><strong>Presigned uploads from day one:</strong> Bypassing the server for file bytes is architecturally correct and doesn't add complexity — just different API design.</li>
+            <li><strong>BigInt for sizes:</strong> A 5-minute schema change that prevents subtle bugs and broken analytics later.</li>
+            <li><strong>Remove prisma.$disconnect() from handlers:</strong> Easy fix, meaningful performance improvement.</li>
+            <li><strong>React Query / SWR instead of manual fetch:</strong> The home page video fetch is a manual <code>useEffect</code> + <code>useState</code> pattern. SWR handles caching, revalidation, and loading states with 10 lines instead of 30, and gives background refresh for free.</li>
+            <li><strong>Environment validation:</strong> Use <code>zod</code> to validate <code>process.env</code> at startup. Right now the app will silently fail at runtime if <code>CLOUDINARY_API_KEY</code> is missing — a startup crash with a clear message is far better.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-l">video-saas / case-study / v1.0</div>
+    <div class="footer-r">Built by Kajal Sanwal</div>
+  </div>
+
+</div>
+<script>
+  document.getElementById('qa').addEventListener('click', e => {
+    const q = e.target.closest('.qa-q');
+    if (!q) return;
+    const item = q.closest('.qa-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.qa-item.open').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+</script>
+</body>
+</html>
