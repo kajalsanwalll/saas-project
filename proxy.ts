@@ -16,13 +16,12 @@ export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
   const currentUrl = new URL(req.url)
 
-  // ✅ Do NOT redirect API routes — let them handle auth themselves
-   if (currentUrl.pathname.startsWith("/api")) {
+  //Do NOT redirect API routes — let them handle auth themselves
+  if (currentUrl.pathname.startsWith("/api")) {
      return NextResponse.next();
-    }
+  }
 
   const isAccessingDashboard = currentUrl.pathname === "/home"
-  
 
   if(userId && isPublicRoute(req) && !isAccessingDashboard){
 
@@ -36,7 +35,6 @@ export default clerkMiddleware(async (auth, req) => {
     if(!isPublicRoute(req) && !isPublicApiRoute(req)){
       return NextResponse.redirect(new URL("/sign-in", req.url))
     }
-    
     
   }
   return NextResponse.next(); 
